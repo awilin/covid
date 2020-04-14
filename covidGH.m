@@ -1,5 +1,5 @@
 %covidGH Antoni Wilinski, Eryk Szwarc (C)2020
-%script form covid5e5 to locate in GitHub repository
+%script from covid5e5 to place in GitHub repository
 
 
 clear all
@@ -92,68 +92,65 @@ title(['Confirmed, Recovered and Deaths for Hubei '])
 
 %for different countries
 
-no=0; %numer okna w subplocie
-n3=0;  %gdy n3=1 to wydruk 3 najwiêkszych w fig. 25  w=[63 138 226]; %Hubei, W³óchy, USA
-N=75; %liczba dni w macierzach CSSE
+no=0; %subplot number (from 1 to 10)
+n3=0;  %if n3=1 you can print in fig. 25  w=[63 138 226]; %Hubei, Italy, USA
+N=75; %number of cols in CSSE matrix
 
 
-w=[24 51 61 63 82 117 121 138 176 184 226]; %wektor wybranych wierszy - pañstw
+w=[24 51 61 63 82 117 121 138 176 184 226]; %a vector of choosen countries
 w=1:100;
 w=[49 50 51 52 55 61 63 64 66 67 ];
-w=[63 138 226]; %Hubei, W³ochy, USA
+w=[63 138 226]; %Hubei, Italy, USA
 w=[24 51 63 82 117 121 138 140 144 226];
 w=[24 51 63 82 117 121 134 138 140 144 226];
 w=1:226;
 w=[24 63 117 121 134 138 140 144 184 226]; %Belgium, Hubei, France, Germany, Iran, Italy, Japan, South Korea, Poland,United States
-w=[63 138 226]; %Hubei, W³ochy, USA
+w=[63 138 226]; %Hubei, Italy, USA
 w=1:226;
 w=[24 63 117 121 134 138 140 144 184 226]; %Belgium, Hubei, France, Germany, Iran, Italy, Japan, South Korea, Poland,United States
 
 
 for k=w;%54:79%151:166
     ng=k;
-    ngk(k)=0; %nry pañstw nie spe³niajacych warunku ponizej beda równe 0
+    ngk(k)=0; %country numbers not fulfilling the condition below will be equal to 0
     if Conf(ng,N)>1000
-        ngk(k)=k; %wektor numerów pañstw spe³niajacych pow. warunek
+        ngk(k)=k; %vector of numbers of countries meeting the area condition
 no=no+1;
 marker=0;
-thru(no)=0.04; %próg osiagniecia przez wskaznik Yp wyraznego wzrostu
-istu(no)=0;  %próg thru przekroczony?
+thru(no)=0.04; %threshold for achieving clear increase by Yp indicator
+istu(no)=0;  %Threshold thru exceeded? 
 thrd(no)=0.005;  %próg osiagniecia przez wskaznik Yp wyraznego spadku
-istd(no)=0;  %próg thrd przekroczony?
+istd(no)=0;  %threshold thrd exceeded?
 istm(no)=0;
 istuk(no)=0;
 istum(no)=0;
 istud(no)=0;
-sumaCol=Conf(ng,:); % ng pañstwo
+sumaCol=Conf(ng,:); % ng country
 
-y=sumaCol; %uproszczona nazwa krzywej Conf;
-nz=find(y>3); %wektor niezerowych wartosci y; lub wiêkszych od np. 3 po to, by znale¿æ poczatek wzrostu
-pn=nz(1); %indeks pierwszego wyrazu niezerowego lub wyrazu, przy którym przekroczono zadany próg
-%pnk(k)=pn;
+y=sumaCol; %simplified name of the Conf curve;
+nz=find(y>3); %vector of non-zero y values; or larger than e.g. 3 in order to find the beginning of growth
+pn=nz(1); %index of the first non-zero element or element at which the threshold was exceeded
 
-%pb=pn+5; %poczatek badañ - powišzaæ z pn
-Ym=y(end);%y(pb+10); %umowna warto?æ maksimum chwilowego Conf dla celów normalizacji
-movingWindow=10;%10; %wielko?æ przesuwanego okna 
-N=75; %liczba dni w macierzach CSSE
+Ym=y(end);%  conventional value of the instantaneous maximum Conf for normalization purposes
+movingWindow=10;%moving window lenght 
+N=75; %number od columns (days) in CSSE matrices
 for i=2:N
-    currentDate=i;%pb+i;
-    %Ym=max(y(2):y(i));
-    
-    yp(i)=y(currentDate)-y(currentDate-1); %przyrost dobowy Conf
-    Yp(i)=yp(i)/Ym; %!!!!!!!!!!!!! wzgledny przyrost
+    currentDate=i;
+  
+    yp(i)=y(currentDate)-y(currentDate-1); %daily increase of Conf
+    Yp(i)=yp(i)/Ym; %relative increase
     if Yp(i)>thru(no) && istu(no)==0
         istu(no)=1;
-        istuk(no)=i; %dzien, w którym przekroczono próg thru
+        istuk(no)=i; %the day when the thru threshold was exceeded
     end
     if Yp(i)<thru(no) && istu(no)==1 && istm(no)==0
         istm(no)=1;
-        istum(no)=i; %dzien, w którym przekroczono próg thru
+        istum(no)=i; %the day when the middle threshold was exceeded
     end
     if Yp(i)<thrd(no) && istu(no)==1 && istd(no)==0 && istm(no)==1
         %istu(no)=0;
         istd(no)=1;
-        istud(no)=i; %dzien, w którym przekroczono próg thrd
+        istud(no)=i; %the day when the thrd threshold was exceeded
     end
     
     if i==N
@@ -175,7 +172,8 @@ for i=2:N
         
     y1=Dea(ng,:);
     y1=y;
-    %nowy wskaznik - z przesuwanym oknem
+    
+    %new indicator - with moving window
     if i>movingWindow
     S(i)=std(y1(i-movingWindow:i));
     Sc=S(i);
@@ -183,7 +181,7 @@ for i=2:N
     
     Mc=M(i);
     if Mc~=0
-    camInd(i)=Sc/Mc;  %wskaznik Camel Index
+    camInd(i)=Sc/Mc;  %indicator Camel Index
     else
     camInd(i)=0;    
     end
@@ -192,7 +190,7 @@ for i=2:N
     
 end
 
-if n3==1  %# najwiêksze przypadki
+if n3==1  %# biggest cases - Hubei, Italy, USA
     figure(25)
     plot(Yp, 'LineWidth',3)
     hold on
@@ -202,7 +200,7 @@ if n3==1  %# najwiêksze przypadki
     text(47,0.03,'Italy')
     text(62,0.08,'USA')
 
-    %wykresy "wyg³adzone"
+    %smoothed charts
     for i=11:mc(2)-5
         YpMA(i)=mean(Yp(i-8:i));
     end
@@ -218,7 +216,7 @@ if n3==1  %# najwiêksze przypadki
 end
 
 
-if no<=10  && istuk(no)>0%do druku
+if no<=10  && istuk(no)>0
     
     figure(21)
     subplot(5,2,no)
@@ -243,63 +241,60 @@ end  %if no
    
     end %if Conf>1000
 end %k=w
-
-phase;    %stan rozwoju koronowirusa w pañstwie w kolejnosci wg k
-nn=find(ngk); %znajdz niezerowe numery pañstw wymienione w kolejnosci jak w  wektorze model
+%
+phase;    %phase of Civid spread in this country  
+nn=find(ngk); %find non-zero country numbers listed in the order as in the model vector
 ph=[nn; phase]'
 
 
 
-%dla jednego wybranego pañstwa
-no=0; %numer okna w subplocie
-w=63;  %nr pañstwa
-hs=0; %horyzont symulacji
+%for one chooden country
+no=0; %subplot window number
+w=63;  %nr of a country
+hs=0; %simulation horizon
 modelw=0;
 for k=1:10;%54:79%151:166
     ng=w;
-    sumaCol=Conf(ng,:); % ng pañstwo
-    y=sumaCol; %uproszczona nazwa krzywej Conf;
+    sumaCol=Conf(ng,:); % ng country
+    y=sumaCol; %%simplified name of the Conf curve;
    
-    ngk(k)=0; %nry pañstw nie spe³niajacych warunku ponizej beda równe 0
+    ngk(k)=0; %the number of countries not meeting the condition below will be equal to 0
     if Conf(ng,N)>1000
-        ngk(k)=k; %wektor numerów pañstw spe³niajacych pow. warunek
+        ngk(k)=k; %Vector numbers of countries meeting the above condition
     hs=k*5; 
     Ym=y(hs);
 no=no+1;
 marker=0;
-thru(no)=0.04; %próg osiagniecia przez wskaznik Yp wyraznego wzrostu
-istu(no)=0;  %próg thru przekroczony
-thrd(no)=0.006;  %próg osiagniecia przez wskaznik Yp wyraznego spadku
-istd(no)=0;  %próg thrd przekroczony
+thru(no)=0.04; %threshold for the clear increase Yp
+istu(no)=0;  %tnereshold thru exceeded
+thrd(no)=0.006;  %threshold for achieving a clear drop through the Yp indicator
+istd(no)=0;  %tnereshold thrd exceeded
 istuk(no)=0;
 istud(no)=0;
-sumaCol=Conf(ng,:); % ng pañstwo
+sumaCol=Conf(ng,:); % ng country
 
-%y=sumaCol; %uproszczona nazwa krzywej Conf;
-nz=find(y>3); %wektor niezerowych wartosci y; lub wiêkszych od np. 3 po to, by znale¿æ poczatek wzrostu
-pn=nz(1); %indeks pierwszego wyrazu niezerowego lub wyrazu, przy którym przekroczono zadany próg
-%pnk(k)=pn;
+nz=find(y>3); %%vector of non-zero y values; or larger than e.g. 3 in order to find the beginning of growth
+pn=nz(1); %%index of the first non-zero element or element at which the threshold was exceeded
 
-%pb=pn+5; %poczatek badañ - powišzaæ z pn
-Ym=y(end);%y(pb+10); %umowna warto?æ maksimum chw9ilowego Conf dla celów normalizacji
-movingWindow=5;%10; %wielko?æ przesuwanego okna 
+Ym=y(end); %conventional value of the instantaneous maximum Conf for normalization purposes
+movingWindow=5;%10; %moving window lenght 
 for i=2:hs
     currentDate=i;%pb+i;
-    yp(i)=y(currentDate)-y(currentDate-1); %przyrost dobowy Conf
+    yp(i)=y(currentDate)-y(currentDate-1); %daily increase of Conf
     Yp(i)=yp(i)/Ym;
     if Yp(i)>thru(no) && istu(no)==0
         istu(no)=1;
-        istuk(no)=i; %dzien, w którym przekroczono próg thru
+        istuk(no)=i; % %the day when the thru threshold was exceeded
     end
     if Yp(i)<thrd(no) && istu(no)==1 && istd(no)==0
         %istu(no)=0;
         istd(no)=1;
-        istud(no)=i; %dzien, w którym przekroczono próg thrd
+        istud(no)=i; % %the day when the thrd threshold was exceeded
     end
     if istud(no)==0
-        modelw(no)=1;  %model z niezakoñzconym wzrostem
+        modelw(no)=1;  %model with dynamic growth
     else
-        modelw(no)=2;  %model z maksimum 
+        modelw(no)=2;  %model in transition phase 
     end    
     
 end
