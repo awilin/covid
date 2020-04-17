@@ -4,11 +4,11 @@
 
 clear all
 
-Conf110420; %Confirmed cases data prepared in matrix form rows = countries/regions CSSE; 
+Conf160420; %Confirmed cases data prepared in matrix form rows = countries/regions CSSE; 
 %to be prepared form CSSE JHU data
 
-Rec110420;
-Dea110420;
+Rec160420;
+Dea160420;
 
 i=63;
 for j=1:50
@@ -66,8 +66,8 @@ hold on
 plot(sumaColRec,'-g','LineWidth',4)
 hold on
 plot(sumaColDea,'-y', 'LineWidth',4)
-text(50,400000,'Confirmed')
-text(55,110000,'Recovered')
+text(60,1000000,'Confirmed')
+text(70,250000,'Recovered')
 text(60,55000,'Deaths')
 title(['Confirmed, Recovered and Deaths for the whole world'])
  grid on
@@ -93,20 +93,22 @@ title(['Confirmed, Recovered and Deaths for Hubei '])
 %for different countries
 
 no=0; %subplot number (from 1 to 10)
-n3=0;  %if n3=1 you can print in fig. 25  w=[63 138 226]; %Hubei, Italy, USA
-N=75; %number of cols in CSSE matrix
+n3=1;  %if n3=1 you can print in fig. 25  w=[63 138 226]; %Hubei, Italy, USA
+N=86; %number of cols in CSSE matrix
 
 
 w=[24 51 61 63 82 117 121 138 176 184 226]; %a vector of choosen countries
 w=1:100;
 w=[49 50 51 52 55 61 63 64 66 67 ];
-w=[63 138 226]; %Hubei, Italy, USA
-w=[24 51 63 82 117 121 138 140 144 226];
-w=[24 51 63 82 117 121 134 138 140 144 226];
 w=1:226;
 w=[24 63 117 121 134 138 140 144 184 226]; %Belgium, Hubei, France, Germany, Iran, Italy, Japan, South Korea, Poland,United States
-w=[63 138 226]; %Hubei, Italy, USA
 w=1:226;
+w=[63 138 226]; %Hubei, Italy, USA
+w=[24 63 117 121 134 138 140 144 184 226]; %Belgium, Hubei, France, Germany, Iran, Italy, Japan, South Korea, Poland,United States
+%as the last w-vector should be placed a vector with numbers of countries
+%you want to observe. It can be even a single number
+
+w=[63 138 226]; %Hubei, Italy, USA
 w=[24 63 117 121 134 138 140 144 184 226]; %Belgium, Hubei, France, Germany, Iran, Italy, Japan, South Korea, Poland,United States
 
 
@@ -114,10 +116,11 @@ for k=w;%54:79%151:166
     ng=k;
     ngk(k)=0; %country numbers not fulfilling the condition below will be equal to 0
     if Conf(ng,N)>1000
-        ngk(k)=k; %vector of numbers of countries meeting the area condition
+        ngk(k)=k; %vector of numbers of countries meeting the above condition
 no=no+1;
 marker=0;
-thru(no)=0.04; %threshold for achieving clear increase by Yp indicator
+thru(no)=0.03; %threshold for achieving clear increase by Yp indicator; this is data-driven variable; 
+%you can change thru(no) a little bit if some countries with big Conf have 0-phase
 istu(no)=0;  %Threshold thru exceeded? 
 thrd(no)=0.005;  %próg osiagniecia przez wskaznik Yp wyraznego spadku
 istd(no)=0;  %threshold thrd exceeded?
@@ -133,12 +136,13 @@ pn=nz(1); %index of the first non-zero element or element at which the threshold
 
 Ym=y(end);%  conventional value of the instantaneous maximum Conf for normalization purposes
 movingWindow=10;%moving window lenght 
-N=75; %number od columns (days) in CSSE matrices
+N=86; %number od columns (days) in CSSE matrices
 for i=2:N
     currentDate=i;
   
     yp(i)=y(currentDate)-y(currentDate-1); %daily increase of Conf
     Yp(i)=yp(i)/Ym; %relative increase
+        
     if Yp(i)>thru(no) && istu(no)==0
         istu(no)=1;
         istuk(no)=i; %the day when the thru threshold was exceeded
@@ -190,15 +194,15 @@ for i=2:N
     
 end
 
-if n3==1  %# biggest cases - Hubei, Italy, USA
+if n3==0  %# biggest cases - Hubei, Italy, USA
     figure(25)
     plot(Yp, 'LineWidth',3)
     hold on
     title('Hubei, Italy and USA')
      grid on
      text(12,0.10,'Hubei')
-    text(47,0.03,'Italy')
-    text(62,0.08,'USA')
+    text(50,0.03,'Italy')
+    text(70,0.06,'USA')
 
     %smoothed charts
     for i=11:mc(2)-5
@@ -211,7 +215,7 @@ if n3==1  %# biggest cases - Hubei, Italy, USA
     title('Moving averages of Yp')
     text(12,0.04,'Hubei')
     text(54,0.03,'Italy')
-    text(58,0.02,'USA')
+    text(60,0.02,'USA')
     grid on
 end
 
