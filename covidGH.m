@@ -1,11 +1,14 @@
 %covidGH Antoni Wilinski, Eryk Szwarc (C)2020
 %script from covid5e5 to place in GitHub repository
+%Details in the article written by above mentioned authors:
+%A classification of countries and regions in terms of the degree ...
+%of coronavirus spread based on statistical criteria
 
 
 clear all
 
-Conf160420; %Confirmed cases data prepared in matrix form rows = countries/regions CSSE; 
-%to be prepared form CSSE JHU data
+Conf250420; %Confirmed cases data prepared in matrix with rows = countries/regions CSSE; 
+%to be prepared from CSSE JHU data
 
 Rec160420;
 Dea160420;
