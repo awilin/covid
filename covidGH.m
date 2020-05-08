@@ -7,7 +7,7 @@
 
 clear all
 
-Conf250420; %Confirmed cases data prepared in matrix with rows = countries/regions CSSE; 
+Conf070520; %Confirmed cases data prepared in matrix with rows = countries/regions CSSE; 
 %to be prepared from CSSE JHU data
 
 Rec160420;
