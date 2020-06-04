@@ -7,8 +7,10 @@
 
 clear all
 
-Conf070520; %Confirmed cases data prepared in matrix with rows = countries/regions CSSE; 
+Conf230520; %Confirmed cases data prepared in matrix with rows = countries/regions CSSE; 
 %to be prepared from CSSE JHU data
+Conf270520;
+Conf010620;
 
 Rec160420;
 Dea160420;
@@ -104,7 +106,7 @@ w=[24 51 61 63 82 117 121 138 176 184 226]; %a vector of choosen countries
 w=1:100;
 w=[49 50 51 52 55 61 63 64 66 67 ];
 w=1:226;
-w=[24 63 117 121 134 138 140 144 184 226]; %Belgium, Hubei, France, Germany, Iran, Italy, Japan, South Korea, Poland,United States
+w=[29 63 117 121 134 138 140 144 184 226]; %Brasil, Hubei, France, Germany, Iran, Italy, Japan, South Korea, Poland,United States
 w=1:226;
 w=[63 138 226]; %Hubei, Italy, USA
 w=[24 63 117 121 134 138 140 144 184 226]; %Belgium, Hubei, France, Germany, Iran, Italy, Japan, South Korea, Poland,United States
@@ -122,10 +124,26 @@ for k=w;%54:79%151:166
         ngk(k)=k; %vector of numbers of countries meeting the above condition
 no=no+1;
 marker=0;
-thru(no)=0.03; %threshold for achieving clear increase by Yp indicator; this is data-driven variable; 
+thru(no)=0.02; %threshold for achieving clear increase by Yp indicator; this is data-driven variable; 
+%thru validation for different countries after downlod new data
+if no==6
+    thru(6)=0.020;
+end
+if no==5
+    thru(5)=0.0150;
+end
+if no==10
+    thru(10)=0.0150;
+end
+if no==9
+    thru(9)=0.020;
+end
+if no==4
+    thru(4)=0.030;
+end
 %you can change thru(no) a little bit if some countries with big Conf have 0-phase
 istu(no)=0;  %Threshold thru exceeded? 
-thrd(no)=0.005;  %próg osiagniecia przez wskaznik Yp wyraznego spadku
+thrd(no)=0.002;  % threshold for achieving a clear drop by the Yp indicator
 istd(no)=0;  %threshold thrd exceeded?
 istm(no)=0;
 istuk(no)=0;
@@ -139,7 +157,7 @@ pn=nz(1); %index of the first non-zero element or element at which the threshold
 
 Ym=y(end);%  conventional value of the instantaneous maximum Conf for normalization purposes
 movingWindow=10;%moving window lenght 
-N=86; %number od columns (days) in CSSE matrices
+N=mc(2); %number od columns (days) in CSSE matrices
 for i=2:N
     currentDate=i;
   
@@ -255,7 +273,7 @@ ph=[nn; phase]'
 
 
 
-%for one chooden country
+%for one choosen country
 no=0; %subplot window number
 w=63;  %nr of a country
 hs=0; %simulation horizon
