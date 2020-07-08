@@ -11,6 +11,8 @@ Conf230520; %Confirmed cases data prepared in matrix with rows = countries/regio
 %to be prepared from CSSE JHU data
 Conf270520;
 Conf010620;
+Conf100620;
+Conf030720;
 
 Rec160420;
 Dea160420;
@@ -141,6 +143,10 @@ end
 if no==4
     thru(4)=0.030;
 end
+if no==9
+    thru(9)=0.0150;
+end
+
 %you can change thru(no) a little bit if some countries with big Conf have 0-phase
 istu(no)=0;  %Threshold thru exceeded? 
 thrd(no)=0.002;  % threshold for achieving a clear drop by the Yp indicator
